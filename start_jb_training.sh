@@ -13,20 +13,17 @@ SRUN_PARAMS=(
 
 export SLURM_CPU_BIND_USER_SET="ldoms"
 
-export DATA_DIR_PREFIX="/p/scratch/jb_benchmark/deepCam/"
+export DATA_DIR_PREFIX="/p/scratch/jb_benchmark/cosmoUniverse_2019_05_4parE_tf_v2_numpy"
 
-export OUTPUT_ROOT="/p/project/jb_benchmark/MLPerf-1.0/run-logs"
-
-export WIREUP_METHOD="nccl-slurm"
-export SEED="50"
+export OUTPUT_ROOT="/p/project/jb_benchmark/MLPerf-1.0/mlperf-cosmoflow/run-logs"
 
 export DEEPCAM_DIR="/opt/deepCam/"
 #export CUDA_AVAILABLE_DEVICES="0,1,2,3"
 
-SCRIPT_DIR="/p/project/jb_benchmark/MLPerf-1.0/mlperf-deepcam/src/deepCam/run_scripts/"
-SINGULARITY_FILE="/p/project/jb_benchmark/MLPerf-1.0/mlperf-deepcam/docker/nvidia-deepcam.sif"
+SCRIPT_DIR="/p/project/jb_benchmark/MLPerf-1.0/mlperf-cosmoflow/"
+SINGULARITY_FILE="/p/project/jb_benchmark/MLPerf-1.0/mlperf-cosmoflow/nvidia-cosmo-image.sif"
 
-CONFIG_FILE="${SCRIPT_DIR}configs/best_configs/config_DGXA100_128GPU_BS128_graph.sh"
+CONFIG_FILE="${SCRIPT_DIR}cosmoflow/configs/config_DGXA100_common.sh"
 
 srun "${SRUN_PARAMS[@]}" singularity exec --nv \
   --bind "${DATA_DIR_PREFIX}":/data ${SINGULARITY_FILE} \

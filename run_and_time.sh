@@ -171,16 +171,30 @@ if [[ ${PROFILE} -ge 1 ]]; then
         fi
     fi
 fi
+################################################################################
+# Binding
+################################################################################
 
-BIND=''
-cluster=''
-if [[ "${DGXSYSTEM}" == DGX2* ]]; then
-    cluster='circe'
+if [ -n "${SLURM_CPU_BIND_USER_SET}" ]; then
+    echo "Using bindings from SLURM: ${SLURM_CPU_BIND_TYPE}"
+    BIND_CMD=""
+else
+    echo "Using NUMA binding"
+    if [ "$TRAINING_SYSTEM" == "booster" ]
+      then
+        BIND="bash ${SCRIPT_DIR}bind.sh --cpu=${SCRIPT_DIR}juwels_binding.sh \
+                  --mem=${SCRIPT_DIR}juwels_binding.sh --ib=single"
+    else
+      # this is the horeka case
+      BIND="bash ${SCRIPT_DIR}bind.sh --cpu=${SCRIPT_DIR}horeka_binding.sh \
+                --mem=${SCRIPT_DIR}horeka_binding.sh --ib=single"
+    fi
+    #BIND_CMD="./bind.sh --cluster=selene --ib=single --cpu=exclusive"
 fi
-if [[ "${DGXSYSTEM}" == DGXA100* ]]; then
-    cluster='selene'
-fi
-BIND="./bind.sh --cpu=exclusive --ib=single --cluster=${cluster} --"
+
+################################################################################
+# End binding
+################################################################################
 
 if [ "$LOGGER" = "apiLog.sh" ];
 then
@@ -204,7 +218,7 @@ fi
 if [[ ${PROFILE} -ge 1 ]]; then
     TMPDIR=/results ${DISTRIBUTED} ${BIND} ${PROFILE_COMMAND} python train.py "${PARAMS[@]}"; ret_code=$?
 else
-    ${LOGGER:-} ${DISTRIBUTED} ${BIND} python train.py "${PARAMS[@]}"; ret_code=$?
+    ${LOGGER:-} ${DISTRIBUTED} ${BIND} python /workspace/cosmoflow/train.py "${PARAMS[@]}"; ret_code=$?
 fi
 
 if [[ ${PROFILE} -ge 1 ]]; then

@@ -72,7 +72,7 @@ SBATCH_PARAMS=(
   --tasks-per-node     "4"
   --time               "${TIMELIMIT}"
   --gres               "gpu:4"
-  --job-name           "deepcam-mlperf"
+  --job-name           "cosmoflow-mlperf"
   --time               "${TIMELIMIT}"
 )
 
@@ -81,8 +81,8 @@ export TRAINING_SYSTEM="${TRAINING_SYSTEM}"
 if [ "$TRAINING_SYSTEM" == "booster" ]
   then
     # JB
-    export OUTPUT_DIR="/p/project/jb_benchmark/MLPerf-1.0/run-logs/"
-    export OUTPUT_ROOT="/p/project/jb_benchmark/MLPerf-1.0/run-logs/"
+    export OUTPUT_DIR="/p/project/jb_benchmark/MLPerf-1.0/mlperf-cosmoflow/logs/"
+    export OUTPUT_ROOT="/p/project/jb_benchmark/MLPerf-1.0/mlperf-cosmoflow/logs/"
 
     SBATCH_PARAMS+=(
       --partition     "booster"
